@@ -76,7 +76,7 @@ $('body').on('click', 'htrash', function () {
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival));
           else
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,1),date_arrival))/(getLeftDays(date_departure,date_arrival));
-          console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
+          console.log("title1 " + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
         }
       }
     }
@@ -84,10 +84,15 @@ $('body').on('click', 'htrash', function () {
     $("#MrNatan").html(
       sum["Mr. Natan"] ? Math.round(Math.ceil(sum["Mr. Natan"] * 1000000) / 1000000) + ' ILS' : "0"
     );
-    console.log(sum["Mr. Natan"]);
     $("#MrEli").html(
       sum["Mr. Eli"] ? Math.round(Math.ceil(sum["Mr. Eli"] * 1000000) / 1000000) + ' ILS' : "0"
     );
+    // Show total
+    let total = sum["Mr. Natan"] + sum["Mr. Eli"];
+    $("#Total").html(
+      total ? Math.round(Math.ceil(total * 1000000) / 1000000) + ' ILS' : "0"
+    );
+    console.log(sum["Mr. Natan"], sum["Mr. Eli"]);
     if ($("#start_date").html() != "Start Date") setHistory(sum);
   });
 
