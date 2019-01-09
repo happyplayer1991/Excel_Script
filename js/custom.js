@@ -185,6 +185,11 @@ function showHistory(ancher) {
   $("#MrEli").html(
     sum["Mr. Eli"] ?  Math.round(Math.ceil(sum["Mr. Eli"] * 100000) / 100000) + ' ILS' : "0"
   );
+  // Show total
+  let total = sum["Mr. Natan"] + sum["Mr. Eli"];
+  $("#Total").html(
+    total ? Math.round(Math.ceil(total * 1000000) / 1000000) + ' ILS' : "0"
+  );
 }
 
 var reserve_data = {};
