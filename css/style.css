@@ -1,0 +1,155 @@
+.fc-day-grid .fc-row {
+  max-height: 100px;
+}
+
+.fc-scroller {
+  height: auto !important;
+}
+
+.fc-content {
+  height: 80px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#btn-calendar {
+  display: none;
+  width: 30px;
+  height: 50px;
+  margin-left: 44px;
+  background: url("../img/calendar.png") no-repeat center center;
+  -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain;
+  border: none;
+}
+
+td.fc-highlight {
+  background: #8bfb77;
+}
+.fc h2 {
+  font-size: 20px;
+}
+/* The container */
+.radio-container {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+/* Draw Traperzoid */
+.trapezoid { display: none;
+
+  width: 260px;
+  height: 45px;
+  margin: 0px;
+  margin-left: 60px;
+  margin-top: 10px;
+  /* background: url("../img/title.png") no-repeat center center; */
+  background: url("../img/title.png") no-repeat;
+  /* -webkit-background-size: contain;
+  -moz-background-size: contain;
+  -o-background-size: contain;
+  background-size: contain; */
+  border: none;
+	/* border-bottom: 50px solid #555;
+	border-left: 25px solid transparent;
+	border-right: 25px solid transparent;
+	height: 0;
+  width: 125px; */
+
+}
+/* Create a Rectangle Background */
+.rectangle {
+  width:90%;
+  height: auto;
+  margin: 60px;
+  margin-top:0px;
+  background: white;
+  border-style: solid;
+  border-color: transparent;/* #2F528F;*/
+}
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.radio-container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio-container input:checked ~ .checkmark.red {
+  background-color: red;
+}
+.radio-container input:checked ~ .checkmark.yello {
+  background-color: yellow;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+
+.c_item,
+.c-val {
+  display: inline-block;
+}
+.c_item {
+  width: 100px;
+}
+
+.fc-toolbar.fc-header-toolbar{
+  height: 0px!important;
+  margin: 0px!important;
+}
+.htrash{
+  cursor: pointer;
+}
+.fc-day-top.fc-other-month{
+  opacity: 1 !important;
+}
+/*.fc-basic-view .fc-body .fc-row {
+  display: none;
+}*/

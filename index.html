@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1,
+      shrink-to-fit=no"
+    />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Reservation</title>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+    />
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-datepicker.min.css" rel="stylesheet" />
+    <link href="css/fullcalendar.min.css" rel="stylesheet" />
+    <link href="css/calendar.css" rel="stylesheet" />
+
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet" />
+    <!-- Your custom styles (optional) -->
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- Start your project here-->
+    <div class="trapezoid "></div>
+    <div class="rectangle">
+    <div class="container-fluid" style="padding: 20px;">
+      <div class="row">
+        <div class="col-md-3 col-lg-2">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <button
+                class="btn btn-info input-group-text"
+                id="inputGroupfile_xls" style="margin-left:0px"
+              >
+                Upload
+              </button>
+              <button class="btn" id="btn-calendar"></button>
+            </div>
+            <div class="custom-file" style="display:none;">
+              <input
+                type="file"
+                class="custom-file-input"
+                id="my_file_input"
+                aria-describedby="inputGroupfile_xls"
+                accept=".xls"
+              />
+              <label
+                id="my_file_input_label"
+                class="custom-file-label"
+                for="file_xls"
+                >Choose file</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="calendar-container"
+        style="display:none; margin-top: 30px; margin-bottom:15px;"
+      >
+        <h5>
+          <span id="start_date"></span><span>  ㅡ  </span
+          ><span id="end_date"></span>
+        </h5>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="">
+            <div class="">
+              <div class="row">
+                <div class="col-lg-3" style="max-width: 270px;">
+                  <div
+                    class=" b-l calender-sidebar calendar-container"
+                    style="display:none;"
+                  >
+                    <div class="row events">
+                      <div class="col-md-3 col-lg-12">
+                        <label class="radio-container" style="width:65%"
+                          >Mr. Natan
+                          <input
+                            type="radio"
+                            name="radio"
+                            data-class="bg-danger"
+                            data-title="Mr. Natan"
+                            class="default"
+                          />
+                          <span class="checkmark red"></span>
+                        </label>
+
+                        <label class="radio-container"
+                          >Mr. Eli
+                          <input
+                            type="radio"
+                            name="radio"
+                            data-class="bg-warning"
+                            data-title="Mr. Eli"
+                          />
+                          <span class="checkmark yellow"></span>
+                        </label>
+                      </div>
+                    </div>
+                    <div id="calendar"></div>
+                    <button
+                      type="button"
+                      id="btn_calc"
+                      class="btn
+                        btn-primary m-t-10 float-right"
+                      style="display: none; margin-right:0px"
+                    >
+                      Calculate
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-lg-12 border-left p-l-0">
+                  <div class=" border-bottom"><h4 class="">Calculated</h4></div>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="c_item">Mr. Natan:</div>
+                      <div data-id="Mr. Natan" class="c-val" id="MrNatan"></div>
+                    </div>
+                    <div class="col-lg-12">
+                      <div class="c_item">Mr. Eli:</div>
+                      <div data-id="Mr. Eli" class="c-val " id="MrEli"></div>
+                    </div>
+                  </div>
+                  <div class=" border-top border-bottom">
+                    <h4 class="">History</h4>
+                  </div>
+                  <div class="">
+                    <div class="row">
+                      <div class="col-md-12 history-body"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal none-border" id="my-event">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"><strong>Delete</strong></h4>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-hidden="true"
+              >
+                &times;
+              </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary waves-effect"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                class="btn btn-success save-event waves-effect waves-light"
+              >
+                Create event
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger delete-event waves-effect waves-light"
+                data-dismiss="modal"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- /Start your project here-->
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="js/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script
+      type="text/javascript"
+      src="js/bootstrap-datepicker.min.js"
+    ></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="js/mdb.min.js"></script>
+
+    <!-- <script type="text/javascript" src="js/jszip.js"></script> -->
+    <!-- <script type="text/javascript" src="js/xlsx.js"></script> -->
+    <script type="text/javascript" src="js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="js/moment.min.js"></script>
+    <script type="text/javascript" src="js/fullcalendar.js"></script>
+    <!-- <script type="text/javascript" src="js/fullcalendar.min.js"></script> -->
+    <script type="text/javascript" src="js/cal-init.js"></script>
+
+    <script type="text/javascript" src="js/custom.js"></script>
+  </body>
+</html>
