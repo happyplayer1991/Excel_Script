@@ -39,10 +39,14 @@
       if (!eventObj) {
         return;
       }
+
       var events = getCalenderInfo();
       var sel_start = new Date(start);
       var sel_end = new Date(end);
       sel_end.setDate(sel_end.getDate() - 1);
+      
+      /* prevent to override selected date */
+      /*
       for (var event of events) {
         var title = event["title"];
         var start_date = new Date(event["start_date"]);
@@ -51,17 +55,30 @@
           return;
         }
       }
-
+      */
+      
       // retrieve the dropped element's stored Event Object
-      var originalEventObject = { title: eventObj.attr("data-title") };
+      var originalEventObject = { 
+        id: start._i, // id
+        title: eventObj.attr("data-title"),
+      };
       var $categoryClass = eventObj.attr("data-class");
+      
       // we need to copy it, so that multiple events don't have a reference to the same object
       var copiedEventObject = $.extend({}, originalEventObject);
       // assign it the date that was reported
       copiedEventObject.start = start;
       copiedEventObject.end = end;
+      
       if ($categoryClass) copiedEventObject["className"] = [$categoryClass];
+
+      // Test
+      console.log('*********');
+      console.log(copiedEventObject);
+      console.log(start, end);
+
       // render the event on the calendar
+      $this.$calendar.fullCalendar("removeEvents", start._i);
       $this.$calendar.fullCalendar("renderEvent", copiedEventObject, true);
       // is the "remove after drop" checkbox checked?
       if (isCanCalcuate()) {
