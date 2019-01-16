@@ -333,6 +333,39 @@ function calculate() {
 
   var sum = {};
   for (var event of events) {
+    var title = event['title'];
+    sum[title] = sum[title] ? sum[title] : 0;
+    var start = new Date(event['start_date']);
+    var end = new Date(event['end_date']);
+    for (var data of reserved_data.data) {
+      var arrival = new Date(data.Arrival);
+      if((start <= arrival) && (arrival <= end)) {
+        sum[title] += data["Commission amount"]
+      }
+    }
+  }
+
+  showData(sum);
+
+  if ($("#start_date").html() != "Start Date") setHistory(sum);
+}
+
+//////////////////////////////////
+///// 
+///// calculate_old - ecommerce calculation
+/////
+///// 
+function calculate_old() {
+  var sum1 = 0,
+      sum2 = 0;
+  var jsonDatas = localStorage.getItem("reserve_data_" + cur_id);
+  var reserved_data = JSON.parse(jsonDatas);
+  var date_from, date_to;
+
+  var events = getCalenderInfo();
+
+  var sum = {};
+  for (var event of events) {
     var title = event["title"];
     sum[title] = sum[title] ? sum[title] : 0;
     var start_date = new Date(event["start_date"]);
@@ -358,7 +391,6 @@ function calculate() {
           sum[title] += data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival));
         else
           sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,1),date_arrival))/(getLeftDays(date_departure,date_arrival));
-        console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
       }
     }
   }
@@ -368,7 +400,11 @@ function calculate() {
   if ($("#start_date").html() != "Start Date") setHistory(sum);
 }
 
-
+//////////////////////////////////
+///// 
+///// showData - show data using sum
+/////
+/////
 function showData(sum) {
   let sum_natan = 0, sum_eli = 0, total = 0;
   // Init
@@ -377,16 +413,21 @@ function showData(sum) {
   $("#Total").html("0");
 
   if(sum["Mr. Natan"]) {
-    sum_natan = Math.round(Math.ceil(sum["Mr. Natan"] * 1000000) / 1000000);
-    $("#MrNatan").html(sum_natan + ' ILS');
+    sum_natan = sum["Mr. Natan"];
+    sum_natan_text = Math.round(Math.ceil(sum["Mr. Natan"] * 1000000) / 1000000) + ' ILS';
+    $("#MrNatan").html(sum_natan_text);
   }
 
   if(sum["Mr. Eli"]) {
-    sum_eli = Math.round(Math.ceil(sum["Mr. Eli"] * 1000000) / 1000000);
-    $("#MrEli").html(sum_eli + ' ILS');
+    sum_eli = sum["Mr. Eli"];
+    sum_eli_text = Math.round(Math.ceil(sum["Mr. Eli"] * 1000000) / 1000000) + ' ILS';
+    $("#MrEli").html(sum_eli_text);
   }
   
   total = sum_natan + sum_eli;
-  if(total) total += ' ILS';
+  if(total) 
+    total = Math.round(Math.ceil(total * 1000000) / 1000000) + ' ILS';
   $("#Total").html(total);
+
+  // console.log(sum["Mr. Natan"], sum["Mr. Eli"], sum_natan + sum_eli);
 }
