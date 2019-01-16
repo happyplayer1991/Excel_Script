@@ -40,10 +40,10 @@
         return;
       }
 
-      var events = getCalenderInfo();
-      var sel_start = new Date(start);
-      var sel_end = new Date(end);
-      sel_end.setDate(sel_end.getDate() - 1);
+      // var events = getCalenderInfo();
+      // var sel_start = new Date(start);
+      // var sel_end = new Date(end);
+      // sel_end.setDate(sel_end.getDate() - 1);
       
       /* prevent to override selected date */
       /*
@@ -58,28 +58,46 @@
       */
       
       // retrieve the dropped element's stored Event Object
+      /*
       var originalEventObject = { 
         id: start._i, // id
         title: eventObj.attr("data-title"),
       };
-      var $categoryClass = eventObj.attr("data-class");
+      var $categoryClass = eventObj.attr("data-class"); */
       
       // we need to copy it, so that multiple events don't have a reference to the same object
+      /*
       var copiedEventObject = $.extend({}, originalEventObject);
+      */
       // assign it the date that was reported
+      /*
       copiedEventObject.start = start;
       copiedEventObject.end = end;
       
       if ($categoryClass) copiedEventObject["className"] = [$categoryClass];
+      */
 
       // Test
-      console.log('*********');
-      console.log(copiedEventObject);
-      console.log(start, end);
+      // console.log('Test 1');
+      // console.log(copiedEventObject);
+      // console.log(start, end);
 
-      // render the event on the calendar
-      $this.$calendar.fullCalendar("removeEvents", start._i);
-      $this.$calendar.fullCalendar("renderEvent", copiedEventObject, true);
+      var events = $("#calendar").fullCalendar("clientEvents");
+      let currentEventObject = {};
+      let eventObjects = [];
+      let title = eventObj.attr("data-title");
+      let className = [eventObj.attr("data-class")];
+      
+      // get splitted events
+      eventObjects = splitEvents(events, start, end, title, className);
+      
+      eventObjects.forEach(eventObject => {
+        // remove event including [start, end] range
+        $this.$calendar.fullCalendar("removeEvents", eventObject.id);  
+        // render the event on the calendar
+        $this.$calendar.fullCalendar("renderEvent", eventObject, true);
+      });
+
       // is the "remove after drop" checkbox checked?
       if (isCanCalcuate()) {
         $("#btn_calc").show();

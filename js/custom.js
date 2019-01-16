@@ -50,6 +50,11 @@ $('body').on('click', 'htrash', function () {
     var events = getCalenderInfo();
 
     var sum = {};
+
+    // Test
+    // console.log('Test 2');
+    // console.log(events);
+
     for (var event of events) {
       var title = event["title"];
       sum[title] = sum[title] ? sum[title] : 0;
@@ -58,25 +63,26 @@ $('body').on('click', 'htrash', function () {
       for (var data of reserved_data.data) {
         var date_arrival = new Date(data.Arrival);
         var date_departure = new Date(data.Departure);
-
-        if (addDays(start_date,-1)<date_arrival && addDays(date_departure,-1)<end_date) {
+        console.log('***');
+        
+        if ((addDays(start_date,-1) < date_arrival) && (addDays(date_departure,-1) < end_date)) {
           sum[title] += data["Commission amount"] * 1 ;//* (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(addDays(date_departure, 1),date_arrival));
         }
-        else if(addDays(date_arrival,-1) < start_date && addDays(start_date,-1) < date_departure){
+        else if((addDays(date_arrival,-1) < start_date) && (addDays(start_date,-1) < date_departure)) {
         //  sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,0),start_date))/(getLeftDays(addDays(date_departure,0),date_arrival));
-          if((getLeftDays(date_departure,start_date)*1==0))
+          if((getLeftDays(date_departure,start_date) * 1) == 0)
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(date_departure,date_arrival));
           else
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival));
           //console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival)));
         }
-        else if(addDays(date_arrival,-1) < end_date && addDays(end_date,-1) < date_departure){
+        else if((addDays(date_arrival,-1) < end_date) && (addDays(end_date,-1) < date_departure)) {
           //sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,0),date_arrival))/(getLeftDays(addDays(date_departure, 0),date_arrival));
-          if(getLeftDays(addDays(end_date,1),date_departure)==0)
+          if(getLeftDays(addDays(end_date,1),date_departure) == 0)
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival));
           else
             sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,1),date_arrival))/(getLeftDays(date_departure,date_arrival));
-          console.log("title1 " + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
+          // console.log("title " + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
         }
       }
     }
@@ -92,7 +98,7 @@ $('body').on('click', 'htrash', function () {
     $("#Total").html(
       total ? Math.round(Math.ceil(total * 1000000) / 1000000) + ' ILS' : "0"
     );
-    console.log(sum["Mr. Natan"], sum["Mr. Eli"]);
+    // console.log(sum["Mr. Natan"], sum["Mr. Eli"]);
     if ($("#start_date").html() != "Start Date") setHistory(sum);
   });
 
@@ -376,4 +382,70 @@ function isCanCalcuate() {
     }
   }
   return true;
+}
+
+////////////////////////////////////////////
+//
+// compareDate ----- Compare date by type
+// 
+// Author: Vlady
+
+function compareDate(date1, date2, type) {
+  if(type == 'moment') {
+    return (date1._i == date2._i) ? 0 : ((date1._i > date2._i) ? 1 : -1);
+  }
+}
+
+
+
+////////////////////////////////////////////
+//
+// compareMoment ----- Compare moment date
+// 
+// Author: Vlady
+
+function compareMoment(date1, date2) {
+  return compareDate(date1, date2, 'moment');
+}
+
+
+
+////////////////////////////////////////////
+//
+// splitEvents ----- Split events 
+// 
+// Author: Vlady
+
+function splitEvents(events, start, end, title, className) {
+  let eventObjects = [];
+  if((events.length == 0) ||
+    (end._i < events[0].start._i) ||
+    (events[events.length - 1].end._i) < start._i) {
+      eventObjects = [
+        {
+          id: start._i,
+          title: title,
+          className: className,
+          start: start,
+          end: end
+        }
+      ];
+      return eventObjects;
+  } 
+  else {
+    events.forEach((event, index) => {
+      // case-3: *********
+      eventObjects = [
+        {
+          id: start._i,
+          title: title,
+          className: className,
+          start: start,
+          end: end
+        }
+      ];
+    });  
+  }
+  
+  return eventObjects;
 }
