@@ -40,71 +40,14 @@ $('body').on('click', 'htrash', function () {
   });
   $(".row.events input[type='radio'].default").click();
 
+  
   $("#btn_calc").click(function () {
-    var sum1 = 0,
-      sum2 = 0;
-    var jsonDatas = localStorage.getItem("reserve_data_" + cur_id);
-    var reserved_data = JSON.parse(jsonDatas);
-    var date_from, date_to;
-
-    var events = getCalenderInfo();
-
-    var sum = {};
-    for (var event of events) {
-      var title = event["title"];
-      sum[title] = sum[title] ? sum[title] : 0;
-      var start_date = new Date(event["start_date"]);
-      var end_date = new Date(event["end_date"]);
-      for (var data of reserved_data.data) {
-        var date_arrival = new Date(data.Arrival);
-        var date_departure = new Date(data.Departure);
-
-        if (addDays(start_date,-1)<date_arrival && addDays(date_departure,-1)<end_date) {
-          sum[title] += data["Commission amount"] * 1 ;//* (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(addDays(date_departure, 1),date_arrival));
-        }
-        else if(addDays(date_arrival,-1) < start_date && addDays(start_date,-1) < date_departure){
-        //  sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,0),start_date))/(getLeftDays(addDays(date_departure,0),date_arrival));
-          if((getLeftDays(date_departure,start_date)*1==0))
-            sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(date_departure,date_arrival));
-          else
-            sum[title] += data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival));
-          //console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival)));
-        }
-        else if(addDays(date_arrival,-1) < end_date && addDays(end_date,-1) < date_departure){
-          //sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,0),date_arrival))/(getLeftDays(addDays(date_departure, 0),date_arrival));
-          if(getLeftDays(addDays(end_date,1),date_departure)==0)
-            sum[title] += data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival));
-          else
-            sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,1),date_arrival))/(getLeftDays(date_departure,date_arrival));
-          console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
-        }
-      }
-    }
-
-
-      $("#MrNatan").html(
-          sum["Mr. Natan"] ? Math.round(Math.ceil(sum["Mr. Natan"] * 1000000) / 1000000) + ' ILS' : "0"
-      );
-      console.log(sum["Mr. Natan"]);
-      $("#MrEli").html(
-          sum["Mr. Eli"] ? Math.round(Math.ceil(sum["Mr. Eli"] * 1000000) / 1000000) + ' ILS' : "0"
-      );
-
-      var sum = {
-          natan: sum["Mr. Natan"] ? Math.ceil(sum["Mr. Natan"] * 100000) / 100000 : 0,
-          eli: sum["Mr. Eli"] ? Math.ceil(sum["Mr. Eli"] * 100000) / 100000 : 0
-      };
-
-      var total = (sum['natan'] + sum['eli']).toFixed();
-
-      $("#Total").html(total + ' ILS');
-
-      if ($("#start_date").html() != "Start Date") setHistory(sum);
+    calculate();
   });
 
-    $("#btn-calendar").click(function () {
-        $("#start_date").html(reserve_data["start_date"]);
-        $("#end_date").html(reserve_data["end_date"]);
+  $("#btn-calendar").click(function () {
+    $("#start_date").html(reserve_data["start_date"]);
+    $("#end_date").html(reserve_data["end_date"]);
 
     $.CalendarApp.reset(reserve_data["start_date"], reserve_data["end_date"]);
 
@@ -185,12 +128,7 @@ function delHistory(id) {
 function showHistory(ancher) {
   var index = $(ancher).attr("data-id");
   var sum = histories[index]["value"] ? histories[index]["value"] : {};
-  $("#MrNatan").html(
-    sum["Mr. Natan"] ?  Math.round(Math.ceil(sum["Mr. Natan"] * 100000) / 100000) + ' ILS' : "0"
-  );
-  $("#MrEli").html(
-    sum["Mr. Eli"] ?  Math.round(Math.ceil(sum["Mr. Eli"] * 100000) / 100000) + ' ILS' : "0"
-  );
+  showData(sum);
 }
 
 var reserve_data = {};
@@ -377,4 +315,78 @@ function isCanCalcuate() {
     }
   }
   return true;
+}
+
+//////////////////////////////////
+///// 
+///// calculate - ecommerce calculation
+/////
+///// 
+function calculate() {
+  var sum1 = 0,
+      sum2 = 0;
+  var jsonDatas = localStorage.getItem("reserve_data_" + cur_id);
+  var reserved_data = JSON.parse(jsonDatas);
+  var date_from, date_to;
+
+  var events = getCalenderInfo();
+
+  var sum = {};
+  for (var event of events) {
+    var title = event["title"];
+    sum[title] = sum[title] ? sum[title] : 0;
+    var start_date = new Date(event["start_date"]);
+    var end_date = new Date(event["end_date"]);
+    for (var data of reserved_data.data) {
+      var date_arrival = new Date(data.Arrival);
+      var date_departure = new Date(data.Departure);
+
+      if (addDays(start_date,-1)<date_arrival && addDays(date_departure,-1)<end_date) {
+        sum[title] += data["Commission amount"] * 1 ;//* (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(addDays(date_departure, 1),date_arrival));
+      }
+      else if(addDays(date_arrival,-1) < start_date && addDays(start_date,-1) < date_departure){
+      //  sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,0),start_date))/(getLeftDays(addDays(date_departure,0),date_arrival));
+        if((getLeftDays(date_departure,start_date)*1==0))
+          sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(date_departure,1),start_date))/(getLeftDays(date_departure,date_arrival));
+        else
+          sum[title] += data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival));
+        //console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(date_departure,start_date))/(getLeftDays(date_departure,date_arrival)));
+      }
+      else if(addDays(date_arrival,-1) < end_date && addDays(end_date,-1) < date_departure){
+        //sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,0),date_arrival))/(getLeftDays(addDays(date_departure, 0),date_arrival));
+        if(getLeftDays(addDays(end_date,1),date_departure)==0)
+          sum[title] += data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival));
+        else
+          sum[title] += data["Commission amount"] * 1 * (getLeftDays(addDays(end_date,1),date_arrival))/(getLeftDays(date_departure,date_arrival));
+        console.log("title1" + data["Commission amount"] * 1 * (getLeftDays(end_date,date_arrival))/(getLeftDays(date_departure,date_arrival)));
+      }
+    }
+  }
+
+  showData(sum);
+
+  if ($("#start_date").html() != "Start Date") setHistory(sum);
+}
+
+
+function showData(sum) {
+  let sum_natan = 0, sum_eli = 0, total = 0;
+  // Init
+  $("#MrNatan").html("0");
+  $("#MrEli").html("0");
+  $("#Total").html("0");
+
+  if(sum["Mr. Natan"]) {
+    sum_natan = Math.round(Math.ceil(sum["Mr. Natan"] * 1000000) / 1000000);
+    $("#MrNatan").html(sum_natan + ' ILS');
+  }
+
+  if(sum["Mr. Eli"]) {
+    sum_eli = Math.round(Math.ceil(sum["Mr. Eli"] * 1000000) / 1000000);
+    $("#MrEli").html(sum_eli + ' ILS');
+  }
+  
+  total = sum_natan + sum_eli;
+  if(total) total += ' ILS';
+  $("#Total").html(total);
 }
