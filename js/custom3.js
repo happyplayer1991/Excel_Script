@@ -56,7 +56,6 @@ $(document).ready(function () {
         dt.setDate(dt.getDate() + 1);
       }
     }
-
     $("#MrNatan").html(
       sum["Mr. Natan"] ? Math.ceil(sum["Mr. Natan"] * 100000) / 100000 : "0"
     );

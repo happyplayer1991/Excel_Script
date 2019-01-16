@@ -39,65 +39,100 @@
       if (!eventObj) {
         return;
       }
+      var events = getCalenderInfo();
+      var sel_start = new Date(start);
+      var sel_end = new Date(end);
+      sel_end.setDate(sel_end.getDate() - 1);
 
-      // var events = getCalenderInfo();
-      // var sel_start = new Date(start);
-      // var sel_end = new Date(end);
-      // sel_end.setDate(sel_end.getDate() - 1);
-      
-      /* prevent to override selected date */
-      /*
+      var eventsLog = $("#calendar").fullCalendar("clientEvents");
+
+        for (var i = 0; i < eventsLog.length; i++) {
+            var start_date = new Date(eventsLog[i].start._d);
+            var end_date = "";
+            if (eventsLog[i].end != null) {
+                end_date = new Date(eventsLog[i].end._d);
+                end_date.setDate(end_date.getDate() - 1);
+                var ev = eventsLog[i];
+                if (sel_start >= start_date && sel_end <= end_date &&  sel_start.getTime() != sel_end.getTime() && ev.title == eventObj.attr("data-title")) {
+                    return
+                }
+                else if (sel_start < start_date && sel_end >= start_date && sel_end < end_date &&  sel_start.getTime() != sel_end.getTime()) {
+                    var tmp =  sel_end;
+                    tmp.setDate(sel_end.getDate() + 1);
+                    ev.start._d = tmp;
+                    $this.$calendarObj.fullCalendar("updateEvent",ev)
+                }
+                else if (sel_start <= end_date && sel_start > start_date && sel_end > end_date &&  sel_start.getTime() != sel_end.getTime()) {
+                    var tmp =  sel_start;
+                    ev.end._d = tmp;
+                    $this.$calendarObj.fullCalendar("updateEvent",ev)
+                }
+                else if (sel_start > start_date && sel_end < end_date) {
+                    //left
+                    var tmp =  sel_start;
+                    var endTmp = $.extend({}, ev.end);
+                    ev.end._d = tmp;
+                    $this.$calendarObj.fullCalendar("updateEvent",ev)
+                    var newStartSecondEvent = sel_end;
+                    newStartSecondEvent.setDate(newStartSecondEvent.getDate() + 1);
+                    //right
+                    var startTmp = ev.start;
+                    startTmp._d = newStartSecondEvent;
+                    var originalEventObject = { title: ev.title };
+                    var $categoryClass = eventObj.attr("data-class");
+                    var copiedEventObject = $.extend({}, originalEventObject);
+                    copiedEventObject.start = startTmp;
+                    copiedEventObject.end = $.extend({}, end);
+                    copiedEventObject.end._d = endTmp._d;
+                    if ($categoryClass) copiedEventObject["className"] = ev.className;
+                    $this.$calendar.fullCalendar("renderEvent", copiedEventObject, true);
+                }
+                else if (sel_start > start_date && sel_end.getTime() == end_date.getTime() ) {
+                    var tmp =  sel_start;
+                    ev.end._d = tmp;
+                    $this.$calendarObj.fullCalendar("updateEvent",ev)
+                }
+                else if (sel_start.getTime() == start_date.getTime() && sel_end < end_date) {
+                    var tmp =  sel_end;
+                    tmp.setDate(tmp.getDate() + 1);
+                    ev.start._d = tmp;
+                    $this.$calendarObj.fullCalendar("updateEvent",ev)
+                }
+                else if ( sel_start.getTime() == sel_end.getTime() && sel_start.getTime() == start_date.getTime() && sel_end.getTime() == end_date.getTime()) {
+                    var tmp = []
+                    tmp.push(ev._id);
+                    $this.$calendar.fullCalendar("removeEvents",tmp);
+                }
+                else if (sel_start < start_date && sel_end > end_date) {
+                    var tmp = []
+                    tmp.push(ev._id);
+                    $this.$calendar.fullCalendar("removeEvents",tmp);
+                }
+
+                $this.$calendarObj.fullCalendar("rerenderEvents");
+            }
+        }
+
       for (var event of events) {
         var title = event["title"];
         var start_date = new Date(event["start_date"]);
         var end_date = new Date(event["end_date"]);
         if (!(sel_end < start_date) && !(sel_start > end_date)) {
-          return;
+          //return;
         }
       }
-      */
-      
+
       // retrieve the dropped element's stored Event Object
-      /*
-      var originalEventObject = { 
-        id: start._i, // id
-        title: eventObj.attr("data-title"),
-      };
-      var $categoryClass = eventObj.attr("data-class"); */
-      
+      var originalEventObject = { title: eventObj.attr("data-title") };
+      var $categoryClass = eventObj.attr("data-class");
       // we need to copy it, so that multiple events don't have a reference to the same object
-      /*
       var copiedEventObject = $.extend({}, originalEventObject);
-      */
       // assign it the date that was reported
-      /*
       copiedEventObject.start = start;
       copiedEventObject.end = end;
-      
       if ($categoryClass) copiedEventObject["className"] = [$categoryClass];
-      */
-
-      // Test
-      // console.log('Test 1');
-      // console.log(copiedEventObject);
-      // console.log(start, end);
-
-      var events = $("#calendar").fullCalendar("clientEvents");
-      let currentEventObject = {};
-      let eventObjects = [];
-      let title = eventObj.attr("data-title");
-      let className = [eventObj.attr("data-class")];
-      
-      // get splitted events
-      eventObjects = splitEvents(events, start, end, title, className);
-      
-      eventObjects.forEach(eventObject => {
-        // remove event including [start, end] range
-        $this.$calendar.fullCalendar("removeEvents", eventObject.id);  
-        // render the event on the calendar
-        $this.$calendar.fullCalendar("renderEvent", eventObject, true);
-      });
-
+      // render the event on the calendar
+      $this.$calendar.fullCalendar("renderEvent", copiedEventObject, true);
       // is the "remove after drop" checkbox checked?
       if (isCanCalcuate()) {
         $("#btn_calc").show();
